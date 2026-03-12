@@ -9,5 +9,5 @@ package model;
  * @author DANIELA ROJAS
  */
 public interface Calculable {
-    
+    double calcularTotal();
 }
