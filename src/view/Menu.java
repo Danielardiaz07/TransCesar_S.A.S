@@ -9,15 +9,20 @@ package view;
  * @author DANIELA ROJAS
  */
 
-import Service.VehiculoService;
-import Service.PersonaService;
+import service.VehiculoService;
+import Service.ConductorService;
+import Service.PasajeroService;
 import Service.TicketService;
 import java.util.Scanner;
 public class Menu {
     private Scanner scanner = new Scanner(System.in);
-    private VehiculoService vehiculoService = new VehiculoService();
-    private PersonaService personaService = new PersonaService();
-    private TicketService ticketService = new TicketService();
+    private service.VehiculoService vehiculoService = new service.VehiculoService();
+private Service.ConductorService conductorService = new Service.ConductorService();
+private Service.PasajeroService pasajeroService = new Service.PasajeroService();
+private Service.TicketService ticketService = new Service.TicketService(
+    pasajeroService.getPasajeros(),
+    vehiculoService.listarVehiculos()
+);
     
     
     public void mostrar() {
@@ -76,7 +81,7 @@ public class Menu {
         int cat = scanner.nextInt();
         scanner.nextLine();
         String[] categorias = {"B1", "B2", "C1", "C2"};
-        personaService.registrarConductor(cedula, nombre, licencia, categorias[cat - 1]);
+        conductorService.registrarConductor(new model.Conductor(licencia, categorias[cat - 1], cedula, nombre));
         System.out.println("Conductor registrado correctamente.");
     }
     
@@ -89,7 +94,11 @@ public class Menu {
         System.out.println("Tipo: 1. Regular  2. Estudiante  3. Adulto Mayor");
         int tipo = scanner.nextInt();
         scanner.nextLine();
-        personaService.registrarPasajero(cedula, nombre, tipo);
+        switch(tipo) {
+         case 1: pasajeroService.registrarPasajero(new model.PasajeroRegular(cedula, nombre)); break;
+         case 2: pasajeroService.registrarPasajero(new model.PasajeroEstudiante(cedula, nombre)); break;
+         case 3: pasajeroService.registrarPasajero(new model.PasajeroAdultoMayor(cedula, nombre)); break;
+}
         System.out.println("Pasajero registrado correctamente.");
     }
      
@@ -103,17 +112,24 @@ public class Menu {
         String origen = scanner.nextLine();
         System.out.print("Destino: ");
         String destino = scanner.nextLine();
-        ticketService.venderTicket(cedula, placa, origen, destino);
+        ticketService.venderTicket(
+        pasajeroService.buscarPasajeroPorCedula(cedula),
+        vehiculoService.buscarPorPlaca(placa),
+        origen, destino
+);
     }
     
     private void listarTickets() {
         System.out.println("\n-- Tickets Vendidos --");
-        ticketService.listarTickets();
+       ticketService.listarTickets();
+       ticketService.mostrarTotalRecaudado();
     }
 
     private void verEstadisticas() {
         System.out.println("\n-- Estadisticas --");
-        ticketService.mostrarEstadisticas();
+        ticketService.mostrarCantidadPasajerosPorTipo();
+        ticketService.mostrarVehiculoConMasTicketsVendidos();
+        ticketService.mostrarTotalRecaudado();
     }
   
 }

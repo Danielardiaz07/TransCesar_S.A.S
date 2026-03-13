@@ -18,6 +18,10 @@ public class Conductor extends Persona{
         this.categoriaLicencia = categoriaLicencia;
     }
 
+    public boolean tieneLicenciaValida() {
+    return numeroLicencia != null && !numeroLicencia.isEmpty();
+    }
+    
     public String getNumeroLicencia() {
         return numeroLicencia;
     }

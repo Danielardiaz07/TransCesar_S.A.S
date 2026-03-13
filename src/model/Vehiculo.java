@@ -24,7 +24,7 @@ public abstract class Vehiculo implements Imprimible {
     public int getCapacidad() { 
         return capacidadMaxima; 
     }
-    public int getPasajeros() { 
+    public int getPasajerosActuales() { 
         return pasajerosActuales; 
     }
     public boolean isDisponible() { 
@@ -52,6 +52,10 @@ public abstract class Vehiculo implements Imprimible {
     public void agregarPasajero() {
         if (tieneCupos()) 
             pasajerosActuales++;
+    }
+    
+    public boolean tieneCuposDisponibles() {
+    return tieneCupos();
     }
 
     public abstract String serializar();
