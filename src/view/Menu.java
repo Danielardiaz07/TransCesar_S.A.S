@@ -9,9 +9,9 @@ package view;
  * @author DANIELA ROJAS
  */
 
-import service.VehiculoService;
-import service.PersonaService;
-import service.TicketService;
+import Service.VehiculoService;
+import Service.PersonaService;
+import Service.TicketService;
 import java.util.Scanner;
 public class Menu {
     private Scanner scanner = new Scanner(System.in);
