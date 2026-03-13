@@ -56,4 +56,102 @@ public class TicketService {
         System.out.println("Ticket vendido con éxito.");
         return ticket;
     }
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void listarTickets() {
+        if (tickets.isEmpty()) {
+            System.out.println("No hay tickets vendidos.");
+            return;
+        }
+
+        for (Ticket ticket : tickets) {
+            ticket.imprimirDetalle();
+            System.out.println("----------------------------");
+        }
+    }
+
+    public double calcularTotalRecaudado() {
+        double total = 0;
+
+        for (Ticket ticket : tickets) {
+            total += ticket.calcularTotal();
+        }
+
+        return total;
+    }
+
+    public void mostrarTotalRecaudado() {
+        System.out.println("Total recaudado: $" + calcularTotalRecaudado());
+    }
+
+    public void mostrarCantidadPasajerosPorTipo() {
+        int regulares = 0;
+        int estudiantes = 0;
+        int adultosMayores = 0;
+
+        for (Ticket ticket : tickets) {
+            String tipo = ticket.getPasajero().getTipoPasajero();
+
+            switch (tipo.toLowerCase()) {
+                case "regular":
+                    regulares++;
+                    break;
+                case "estudiante":
+                    estudiantes++;
+                    break;
+                case "adultomayor":
+                    adultosMayores++;
+                    break;
+            }
+        }
+
+        System.out.println("=== CANTIDAD DE PASAJEROS POR TIPO ===");
+        System.out.println("Regulares: " + regulares);
+        System.out.println("Estudiantes: " + estudiantes);
+        System.out.println("Adultos mayores: " + adultosMayores);
+    }
+
+    public Vehiculo obtenerVehiculoConMasTicketsVendidos() {
+        if (tickets.isEmpty()) {
+            return null;
+        }
+
+        Map<String, Integer> contadorPorPlaca = new HashMap<>();
+        Map<String, Vehiculo> vehiculosMap = new HashMap<>();
+
+        for (Ticket ticket : tickets) {
+            String placa = ticket.getVehiculo().getPlaca();
+
+            contadorPorPlaca.put(placa, contadorPorPlaca.getOrDefault(placa, 0) + 1);
+            vehiculosMap.put(placa, ticket.getVehiculo());
+        }
+
+        String placaGanadora = null;
+        int maxTickets = 0;
+
+        for (String placa : contadorPorPlaca.keySet()) {
+            int cantidad = contadorPorPlaca.get(placa);
+
+            if (cantidad > maxTickets) {
+                maxTickets = cantidad;
+                placaGanadora = placa;
+            }
+        }
+
+        return vehiculosMap.get(placaGanadora);
+    }
+
+    public void mostrarVehiculoConMasTicketsVendidos() {
+        Vehiculo vehiculo = obtenerVehiculoConMasTicketsVendidos();
+
+        if (vehiculo == null) {
+            System.out.println("No hay tickets vendidos aún.");
+            return;
+        }
+
+        System.out.println("=== VEHÍCULO CON MÁS TICKETS VENDIDOS ===");
+        vehiculo.imprimirDetalle();
+    }
 }
