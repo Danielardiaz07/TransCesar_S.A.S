@@ -4,7 +4,7 @@
  */
 package Service;
 
-import dao.ConductorDAO;
+import DAO.ConductorDAO;
 import model.Conductor;
 
 import java.util.List;
@@ -13,8 +13,8 @@ import java.util.List;
  * @author Jose Rodriguez
  */
 public class ConductorService {
-    private List<Conductor> conductores;
-    private ConductorDAO conductorDAO;
+    private final List<Conductor> conductores;
+    private final ConductorDAO conductorDAO;
 
     public ConductorService() {
         conductorDAO = new ConductorDAO();
@@ -35,5 +35,29 @@ public class ConductorService {
         conductores.add(conductor);
         conductorDAO.guardar(conductor);
         return true;
+    }
+     public Conductor buscarConductorPorCedula(String cedula) {
+        for (Conductor c : conductores) {
+            if (c.getCedula().equals(cedula)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public List<Conductor> getConductores() {
+        return conductores;
+    }
+
+    public void listarConductores() {
+        if (conductores.isEmpty()) {
+            System.out.println("No hay conductores registrados.");
+            return;
+        }
+
+        for (Conductor c : conductores) {
+            c.imprimirDetalle();
+            System.out.println("-------------------------");
+        }
     }
 }
