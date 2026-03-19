@@ -17,9 +17,9 @@ import java.util.Scanner;
 public class Menu {
     private Scanner scanner = new Scanner(System.in);
     private service.VehiculoService vehiculoService = new service.VehiculoService();
-private Service.ConductorService conductorService = new Service.ConductorService();
-private Service.PasajeroService pasajeroService = new Service.PasajeroService();
-private Service.TicketService ticketService = new Service.TicketService(
+    private Service.ConductorService conductorService = new Service.ConductorService();
+    private Service.PasajeroService pasajeroService = new Service.PasajeroService();
+    private Service.TicketService ticketService = new Service.TicketService(
     pasajeroService.getPasajeros(),
     vehiculoService.listarVehiculos()
 );
@@ -28,18 +28,16 @@ private Service.TicketService ticketService = new Service.TicketService(
     public void mostrar() {
         int opcion;
         do {
-            System.out.println("\n╔══════════════════════════════════╗");
-            System.out.println("║   TransCesar S.A.S - Sistema     ║");
-            System.out.println("╠══════════════════════════════════╣");
-            System.out.println("║  1. Registrar vehículo           ║");
-            System.out.println("║  2. Registrar conductor          ║");
-            System.out.println("║  3. Registrar pasajero           ║");
-            System.out.println("║  4. Vender ticket                ║");
-            System.out.println("║  5. Listar tickets vendidos      ║");
-            System.out.println("║  6. Ver estadísticas             ║");
-            System.out.println("║  7. Salir                        ║");
-            System.out.println("╚══════════════════════════════════╝");
-            System.out.print("Seleccione una opción: ");
+            System.out.println("\n=== TransCesar S.A.S - Sistema ===");
+            System.out.println("1. Registrar vehiculo");
+            System.out.println("2. Registrar conductor");
+            System.out.println("3. Registrar pasajero");
+            System.out.println("4. Vender ticket");
+            System.out.println("5. Listar tickets vendidos");
+            System.out.println("6. Ver estadisticas");
+            System.out.println("7. Modulo de reportes");
+            System.out.println("8. Salir");
+            System.out.print("Seleccione una opcion: ");
             opcion = scanner.nextInt();
             scanner.nextLine();
             
@@ -50,10 +48,11 @@ private Service.TicketService ticketService = new Service.TicketService(
                 case 4: venderTicket(); break;
                 case 5: listarTickets(); break;
                 case 6: verEstadisticas(); break;
-                case 7: System.out.println("¡Hasta luego!"); break;
+                case 7: mostrarMenuReportes(); break;
+                case 8: System.out.println("¡Hasta luego!"); break;
                 default: System.out.println("Opción no válida.");
             }
-        } while (opcion != 7);
+        } while (opcion != 8);
     }
     
     private void registrarVehiculo() {
@@ -131,5 +130,52 @@ private Service.TicketService ticketService = new Service.TicketService(
         ticketService.mostrarVehiculoConMasTicketsVendidos();
         ticketService.mostrarTotalRecaudado();
     }
+    
+    private void mostrarMenuReportes() {
+    int opcion;
+    do {
+        System.out.println("\n=== MODULO DE REPORTES ===");
+        System.out.println("1. Tickets por fecha");
+        System.out.println("2. Tickets por tipo de vehiculo");
+        System.out.println("3. Tickets por tipo de pasajero");
+        System.out.println("4. Resumen del dia actual");
+        System.out.println("5. Volver");
+        System.out.print("Seleccione: ");
+        opcion = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (opcion) {
+            case 1:
+                System.out.print("Ingrese la fecha (YYYY-MM-DD): ");
+                String fecha = scanner.nextLine();
+                ticketService.listarTicketsPorFecha(java.time.LocalDate.parse(fecha));
+                break;
+            case 2:
+                System.out.print("Tipo de vehiculo (Buseta/MicroBus/Bus): ");
+                String tipoV = scanner.nextLine();
+                ticketService.listarTicketsPorTipoVehiculo(tipoV);
+                break;
+            case 3:
+                System.out.print("Tipo de pasajero (Regular/Estudiante/AdultoMayor): ");
+                String tipoP = scanner.nextLine();
+                ticketService.listarTicketsPorTipoPasajero(tipoP);
+                break;
+            case 4:
+                ticketService.mostrarResumenDiaActual();
+                break;
+            case 5:
+                System.out.println("Volviendo al menu principal.");
+                break;
+            default:
+                System.out.println("Opcion no valida.");
+        }
+    } while (opcion != 5);
+}
+    
+    
+    
+    
+    
+    
   
 }
