@@ -28,43 +28,25 @@ public class PasajeroDAO {
     public List<Pasajero> cargar() {
         List<Pasajero> lista = new ArrayList<>();
         File archivo = new File(ARCHIVO);
-
-        if (!archivo.exists()) {
-            return lista;
-        }
-
+        if (!archivo.exists()) return lista;
         try (BufferedReader br = new BufferedReader(new FileReader(ARCHIVO))) {
             String linea;
             while ((linea = br.readLine()) != null) {
-                String[] datos = linea.split(";");
-                if (datos.length == 3) {
-                    String cedula = datos[0];
-                    String nombre = datos[1];
-                    String tipo = datos[2];
-
-                    Pasajero pasajero = crearPasajeroPorTipo(cedula, nombre, tipo);
-                    if (pasajero != null) {
-                        lista.add(pasajero);
-                    }
+                String[] d = linea.split(";");
+                if (d.length == 4) {
+                    LocalDate fecha = LocalDate.parse(d[3]);
+                    Pasajero p = switch (d[2].toLowerCase()) {
+                        case "regular"     -> new PasajeroRegular(d[0], d[1], fecha);
+                        case "estudiante"  -> new PasajeroEstudiante(d[0], d[1], fecha);
+                        case "adultomayor" -> new PasajeroAdultoMayor(d[0], d[1], fecha);
+                        default            -> null;
+                    };
+                    if (p != null) lista.add(p);
                 }
             }
         } catch (IOException e) {
             System.out.println("Error al cargar pasajeros: " + e.getMessage());
         }
-
         return lista;
-    }
-
-    private Pasajero crearPasajeroPorTipo(String cedula, String nombre, String tipo) {
-        switch (tipo.toLowerCase()) {
-            case "regular":
-                return new PasajeroRegular(cedula, nombre);
-            case "estudiante":
-                return new PasajeroEstudiante(cedula, nombre);
-            case "adultomayor":
-                return new PasajeroAdultoMayor(cedula, nombre);
-            default:
-                return null;
-        }
     }
 }
