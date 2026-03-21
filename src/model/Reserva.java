@@ -76,14 +76,17 @@ public class Reserva {
     }
     
     @Override
-public String toString() {
-    return "=== RESERVA ===" +
-           "\nCódigo       : " + codigo +
-           "\nPasajero     : " + pasajero.getNombre() +
-           "\nVehículo     : " + vehiculo.getPlaca() +
-           "\nFecha Creación: " + fechaCreacion.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) +
-           "\nFecha Viaje  : " + fechaViaje.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +
-           "\nEstado       : " + estado;
-}
-    
+    public String toString() {
+        return "=== RESERVA ===" +
+               "\nCódigo       : " + codigo +
+               "\nPasajero     : " + pasajero.getNombre() +
+               "\nVehículo     : " + vehiculo.getPlaca() +
+               "\nFecha Creación: " + fechaCreacion.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) +
+               "\nFecha Viaje  : " + fechaViaje.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +
+               "\nEstado       : " + estado;
+    }
+        public boolean estaVencida() {
+        return estado == EstadoReserva.ACTIVA &&
+               LocalDateTime.now().isAfter(fechaCreacion.plusHours(24));
+    }
 }
