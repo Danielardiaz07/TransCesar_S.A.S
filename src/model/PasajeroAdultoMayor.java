@@ -29,6 +29,6 @@ public class PasajeroAdultoMayor extends Pasajero {
 
     @Override
     public String toString() {
-        return cedula + ";" + nombre + ";" + tipoPasajero;
+        return cedula + ";" + nombre + ";" + tipoPasajero + ";" + fechaNacimiento;
     }
 }
