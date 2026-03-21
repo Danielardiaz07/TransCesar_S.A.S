@@ -2,7 +2,7 @@ package model;
 
 public class Buseta extends Vehiculo {
     
-    public Buseta(String placa, String ruta) {
+    public Buseta(String placa, Ruta ruta) {
         super(placa, ruta);
         this.capacidadMaxima = 19;
         this.tarifaBase = 8000;

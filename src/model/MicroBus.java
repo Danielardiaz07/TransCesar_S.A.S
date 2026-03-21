@@ -2,7 +2,7 @@ package model;
 
 public class MicroBus extends Vehiculo {
 
-    public MicroBus(String placa, String ruta) {
+    public MicroBus(String placa, Ruta ruta) {
         super(placa, ruta);
         this.capacidadMaxima = 25;
         this.tarifaBase = 10000;

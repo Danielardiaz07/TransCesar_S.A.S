@@ -2,13 +2,13 @@ package model;
 
 public abstract class Vehiculo implements Imprimible {
     protected String placa;
-    protected String ruta;
+    protected Ruta ruta;
     protected int capacidadMaxima;
     protected int pasajerosActuales;
     protected boolean disponible;
     protected double tarifaBase;
 
-    public Vehiculo(String placa, String ruta) {
+    public Vehiculo(String placa, Ruta ruta) {
         this.placa = placa;
         this.ruta = ruta;
         this.pasajerosActuales = 0;
@@ -18,7 +18,7 @@ public abstract class Vehiculo implements Imprimible {
     public String getPlaca() { 
         return placa; 
     }
-    public String getRuta() { 
+    public Ruta getRuta() { 
         return ruta; 
     }
     public int getCapacidad() { 
