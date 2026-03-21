@@ -3,12 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package DAO;
-
 import model.*;
-
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 /**
  *
  * @author Jose Rodriguez
@@ -18,8 +16,7 @@ public class PasajeroDAO {
 
     public void guardar(Pasajero pasajero) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ARCHIVO, true))) {
-            bw.write(pasajero.toString());
-            bw.newLine();
+            bw.write(pasajero.toString()); bw.newLine();
         } catch (IOException e) {
             System.out.println("Error al guardar pasajero: " + e.getMessage());
         }
