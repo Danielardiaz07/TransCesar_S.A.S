@@ -75,5 +75,15 @@ public class Reserva {
         this.estado = estado;
     }
     
+    @Override
+public String toString() {
+    return "=== RESERVA ===" +
+           "\nCódigo       : " + codigo +
+           "\nPasajero     : " + pasajero.getNombre() +
+           "\nVehículo     : " + vehiculo.getPlaca() +
+           "\nFecha Creación: " + fechaCreacion.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) +
+           "\nFecha Viaje  : " + fechaViaje.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +
+           "\nEstado       : " + estado;
+}
     
 }
