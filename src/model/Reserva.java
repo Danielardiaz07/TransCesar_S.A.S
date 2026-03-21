@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
  * @author Jose Rodriguez
  */
 public class Reserva {
-     private String codigo;
+    private String codigo;
     private Pasajero pasajero;
     private Vehiculo vehiculo;
     private LocalDateTime fechaCreacion;
@@ -25,6 +25,16 @@ public class Reserva {
         this.fechaCreacion = LocalDateTime.now();
         this.fechaViaje = fechaViaje;
         this.estado = EstadoReserva.ACTIVA;
+    }
+
+    public Reserva(String codigo, Pasajero pasajero, Vehiculo vehiculo,
+                   LocalDateTime fechaCreacion, LocalDate fechaViaje, EstadoReserva estado, boolean desdeArchivo) {
+        this.codigo = codigo;
+        this.pasajero = pasajero;
+        this.vehiculo = vehiculo;
+        this.fechaCreacion = fechaCreacion;
+        this.fechaViaje = fechaViaje;
+        this.estado = estado;
     }
 
     public String getCodigo() {
@@ -74,7 +84,16 @@ public class Reserva {
     public void setEstado(EstadoReserva estado) {
         this.estado = estado;
     }
-    
+
+    public String serializar() {
+        return codigo + ";" +
+               pasajero.getCedula() + ";" +
+               vehiculo.getPlaca() + ";" +
+               fechaCreacion + ";" +
+               fechaViaje + ";" +
+               estado;
+    }
+
     @Override
     public String toString() {
         return "=== RESERVA ===" +
@@ -85,7 +104,8 @@ public class Reserva {
                "\nFecha Viaje  : " + fechaViaje.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +
                "\nEstado       : " + estado;
     }
-        public boolean estaVencida() {
+
+    public boolean estaVencida() {
         return estado == EstadoReserva.ACTIVA &&
                LocalDateTime.now().isAfter(fechaCreacion.plusHours(24));
     }
