@@ -20,6 +20,14 @@ public abstract class Pasajero extends Persona {
         this.tipoPasajero = tipoPasajero;
         this.fechaNacimiento= fechaNacimiento;
     }
+    
+    public int calcularEdad() {
+        return Period.between(fechaNacimiento, LocalDate.now()).getYears();
+    }
+
+    public boolean esAdultoMayor() {
+        return calcularEdad() >= 60;
+    }
 
     public String getTipoPasajero() {
         return tipoPasajero;
@@ -29,5 +37,13 @@ public abstract class Pasajero extends Persona {
         this.tipoPasajero = tipoPasajero;
     }
 
+    public LocalDate getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+   
     public abstract double calcularDescuento();
 }
