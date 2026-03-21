@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  *
  * @author Jose Rodriguez
@@ -23,6 +22,8 @@ import java.util.Map;
 public class TicketService {
     private List<Ticket> tickets;
     private TicketDAO ticketDAO;
+
+    private static final int limiteTicketsDia = 3;
 
     public TicketService(List<Pasajero> pasajeros, List<Vehiculo> vehiculos) {
         ticketDAO = new TicketDAO();
@@ -40,6 +41,15 @@ public class TicketService {
             return null;
         }
 
+        long ticketsHoy = contarTicketsHoy(pasajero.getCedula());
+        if (ticketsHoy >= limiteTicketsDia) {
+            System.out.printf(
+                "VENTA RECHAZADA: %s ya tiene %d ticket(s) hoy (límite: %d por día).%n",
+                pasajero.getNombre(), ticketsHoy, limiteTicketsDia
+            );
+            return null;
+        }
+
         if (!vehiculo.tieneCuposDisponibles()) {
             System.out.println("El vehículo está lleno. No se puede vender el ticket.");
             return null;
@@ -47,7 +57,6 @@ public class TicketService {
 
         Ticket ticket = new Ticket(pasajero, vehiculo, LocalDate.now(), origen, destino);
 
-        // Aumentar pasajeros actuales del vehículo
         vehiculo.setPasajerosActuales(vehiculo.getPasajerosActuales() + 1);
 
         tickets.add(ticket);
@@ -56,6 +65,7 @@ public class TicketService {
         System.out.println("Ticket vendido con éxito.");
         return ticket;
     }
+
     public List<Ticket> getTickets() {
         return tickets;
     }
@@ -78,7 +88,6 @@ public class TicketService {
         for (Ticket ticket : tickets) {
             total += ticket.calcularTotal();
         }
-
         return total;
     }
 
@@ -139,7 +148,6 @@ public class TicketService {
                 placaGanadora = placa;
             }
         }
-
         return vehiculosMap.get(placaGanadora);
     }
 
@@ -153,5 +161,13 @@ public class TicketService {
 
         System.out.println("=== VEHÍCULO CON MÁS TICKETS VENDIDOS ===");
         vehiculo.imprimirDetalle();
+    }
+    
+    private long contarTicketsHoy(String cedula) {
+        LocalDate hoy = LocalDate.now();
+        return tickets.stream()
+                .filter(t -> t.getPasajero().getCedula().equals(cedula))
+                .filter(t -> t.getFechaCompra().equals(hoy))
+                .count();
     }
 }
