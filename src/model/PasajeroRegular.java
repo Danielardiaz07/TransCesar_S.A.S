@@ -3,14 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
-
+import java.time.LocalDate;
 /**
  *
  * @author Jose Rodriguez
  */
 public class PasajeroRegular extends Pasajero {
-    public PasajeroRegular(String cedula, String nombre) {
-        super(cedula, nombre, "Regular");
+    public PasajeroRegular(String cedula, String nombre, LocalDate fechaNacimiento) {
+        super(cedula, nombre, "Regular",fechaNacimiento);
     }
 
     @Override
@@ -24,11 +24,12 @@ public class PasajeroRegular extends Pasajero {
         System.out.println("Cédula: " + cedula);
         System.out.println("Nombre: " + nombre);
         System.out.println("Tipo: " + tipoPasajero);
+        System.out.println("Edad      : " + calcularEdad() + " años");
         System.out.println("Descuento: " + (calcularDescuento() * 100) + "%");
     }
 
     @Override
     public String toString() {
-        return cedula + ";" + nombre + ";" + tipoPasajero;
+        return cedula + ";" + nombre + ";" + tipoPasajero + ";" + fechaNacimiento;
     }
 }
