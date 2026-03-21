@@ -24,6 +24,7 @@ public class PasajeroAdultoMayor extends Pasajero {
         System.out.println("Cédula: " + cedula);
         System.out.println("Nombre: " + nombre);
         System.out.println("Tipo: " + tipoPasajero);
+        System.out.println("Edad      : " + calcularEdad() + " años");
         System.out.println("Descuento: " + (calcularDescuento() * 100) + "%");
     }
 
