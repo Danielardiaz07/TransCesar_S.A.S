@@ -13,6 +13,7 @@ import service.VehiculoService;
 import Service.ConductorService;
 import Service.PasajeroService;
 import Service.TicketService;
+import model.Ticket;
 import java.util.Scanner;
 public class Menu {
     private Scanner scanner = new Scanner(System.in);
@@ -84,22 +85,24 @@ public class Menu {
         System.out.println("Conductor registrado correctamente.");
     }
     
-     private void registrarPasajero() {
-        System.out.println("\n-- Registrar Pasajero --");
-        System.out.print("Cedula: ");
-        String cedula = scanner.nextLine();
-        System.out.print("Nombre: ");
-        String nombre = scanner.nextLine();
-        System.out.println("Tipo: 1. Regular  2. Estudiante  3. Adulto Mayor");
-        int tipo = scanner.nextInt();
-        scanner.nextLine();
-        switch(tipo) {
-         case 1: pasajeroService.registrarPasajero(new model.PasajeroRegular(cedula, nombre)); break;
-         case 2: pasajeroService.registrarPasajero(new model.PasajeroEstudiante(cedula, nombre)); break;
-         case 3: pasajeroService.registrarPasajero(new model.PasajeroAdultoMayor(cedula, nombre)); break;
-}
-        System.out.println("Pasajero registrado correctamente.");
+    private void registrarPasajero() {
+    System.out.println("\n-- Registrar Pasajero --");
+    System.out.print("Cedula: ");
+    String cedula = scanner.nextLine();
+    System.out.print("Nombre: ");
+    String nombre = scanner.nextLine();
+    System.out.print("Fecha de nacimiento (YYYY-MM-DD): ");
+    java.time.LocalDate fechaNacimiento = java.time.LocalDate.parse(scanner.nextLine());
+    System.out.println("Tipo: 1. Regular  2. Estudiante");
+    int tipo = scanner.nextInt();
+    scanner.nextLine();
+    switch(tipo) {
+        case 1: pasajeroService.registrarPasajero(new model.PasajeroRegular(cedula, nombre, fechaNacimiento)); break;
+        case 2: pasajeroService.registrarPasajero(new model.PasajeroEstudiante(cedula, nombre, fechaNacimiento)); break;
+        default: System.out.println("Tipo no valido.");
     }
+    System.out.println("Pasajero registrado correctamente.");
+}
      
     private void venderTicket() {
         System.out.println("\n-- Vender Ticket --");
@@ -148,20 +151,45 @@ public class Menu {
             case 1:
                 System.out.print("Ingrese la fecha (YYYY-MM-DD): ");
                 String fecha = scanner.nextLine();
-                ticketService.listarTicketsPorFecha(java.time.LocalDate.parse(fecha));
+                java.time.LocalDate fechaBuscada = java.time.LocalDate.parse(fecha);
+                for (Ticket t : ticketService.getTickets()) {
+                    if (t.getFechaCompra().equals(fechaBuscada)) {
+                        t.imprimirDetalle();
+                        System.out.println("---");
+                    }
+                }
                 break;
             case 2:
-                System.out.print("Tipo de vehiculo (Buseta/MicroBus/Bus): ");
+                System.out.print("Tipo (Buseta/MicroBus/Bus): ");
                 String tipoV = scanner.nextLine();
-                ticketService.listarTicketsPorTipoVehiculo(tipoV);
+                for (Ticket t : ticketService.getTickets()) {
+                    if (t.getVehiculo().getClass().getSimpleName().equalsIgnoreCase(tipoV)) {
+                        t.imprimirDetalle();
+                        System.out.println("---");
+                    }
+                }
                 break;
             case 3:
-                System.out.print("Tipo de pasajero (Regular/Estudiante/AdultoMayor): ");
+                System.out.print("Tipo (Regular/Estudiante/AdultoMayor): ");
                 String tipoP = scanner.nextLine();
-                ticketService.listarTicketsPorTipoPasajero(tipoP);
+                for (Ticket t : ticketService.getTickets()) {
+                    if (t.getPasajero().getTipoPasajero().equalsIgnoreCase(tipoP)) {
+                        t.imprimirDetalle();
+                        System.out.println("---");
+                    }
+                }
                 break;
             case 4:
-                ticketService.mostrarResumenDiaActual();
+                java.time.LocalDate hoy = java.time.LocalDate.now();
+                long total = ticketService.getTickets().stream()
+                    .filter(t -> t.getFechaCompra().equals(hoy))
+                    .count();
+                double recaudado = ticketService.getTickets().stream()
+                    .filter(t -> t.getFechaCompra().equals(hoy))
+                    .mapToDouble(t -> t.getValorFinal())
+                    .sum();
+                System.out.println("Tickets vendidos hoy: " + total);
+                System.out.println("Total recaudado hoy: $" + recaudado);
                 break;
             case 5:
                 System.out.println("Volviendo al menu principal.");
@@ -171,7 +199,6 @@ public class Menu {
         }
     } while (opcion != 5);
 }
-    
     
     
     
