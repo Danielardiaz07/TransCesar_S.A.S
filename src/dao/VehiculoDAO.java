@@ -19,15 +19,15 @@ public class VehiculoDAO {
         }
     }
 
-    public List<Vehiculo> cargarTodos() {
+    public List<Vehiculo> cargarTodos(List<Ruta> rutas) {
         List<Vehiculo> lista = new ArrayList<>();
-        lista.addAll(leer(BUSETA));
-        lista.addAll(leer(MICROBUS));
-        lista.addAll(leer(BUS));
+        lista.addAll(leer(BUSETA, rutas));
+        lista.addAll(leer(MICROBUS, rutas));
+        lista.addAll(leer(BUS, rutas));
         return lista;
     }
 
-    private List<Vehiculo> leer(String ruta) {
+    private List<Vehiculo> leer(String archivo, List<Ruta> rutas) {
         List<Vehiculo> lista = new ArrayList<>();
         File f = new File(ruta);
         if (!f.exists()) return lista;
@@ -35,7 +35,7 @@ public class VehiculoDAO {
             String linea;
             while ((linea = br.readLine()) != null) {
                 if (!linea.isBlank()) {
-                    Vehiculo v = deserializar(linea);
+                    Vehiculo v = deserializar(linea,rutas);
                     if (v != null) lista.add(v);
                 }
             }
@@ -45,12 +45,15 @@ public class VehiculoDAO {
         return lista;
     }
 
-    private Vehiculo deserializar(String linea) {
+    private Vehiculo deserializar(String linea,List<Ruta> rutas) {
         String[] p = linea.split(";");
+        Ruta ruta = rutas.stream()
+            .filter(r -> r.getCodigoRuta().equals(p[2]))
+            .findFirst().orElse(null);
         Vehiculo v = switch (p[0]) {
-            case "BUSETA" -> new Buseta(p[1], p[2]);
-            case "MICROBUS" -> new MicroBus(p[1], p[2]);
-            case "BUS" -> new Bus(p[1], p[2]);
+            case "BUSETA" -> new Buseta(p[1],rutas);
+            case "MICROBUS" -> new MicroBus(p[1], rutas);
+            case "BUS" -> new Bus(p[1], rutas);
             default -> null;
         };
         if (v != null) {
