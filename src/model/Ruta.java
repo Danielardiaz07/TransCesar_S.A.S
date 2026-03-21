@@ -63,5 +63,19 @@ public class Ruta implements Imprimible {
         this.tiempoEstimadoMinutos = tiempoEstimadoMinutos;
     }
     
+    @Override
+    public void imprimirDetalle() {
+        System.out.println("=== RUTA ===");
+        System.out.println("Código    : " + codigoRuta);
+        System.out.println("Origen    : " + ciudadOrigen);
+        System.out.println("Destino   : " + ciudadDestino);
+        System.out.printf ("Distancia : %.1f km%n", distanciaKm);
+        System.out.printf ("Tiempo est.: %d min%n", tiempoEstimadoMinutos);
+    }
+
+    @Override
+    public String toString() {
+        return "Ruta{" + "codigoRuta=" + codigoRuta + ", ciudadOrigen=" + ciudadOrigen + ", ciudadDestino=" + ciudadDestino + ", distanciaKm=" + distanciaKm + ", tiempoEstimadoMinutos=" + tiempoEstimadoMinutos + '}';
+    }
     
 }
