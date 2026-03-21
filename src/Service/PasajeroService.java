@@ -5,8 +5,8 @@
 package Service;
 
 import DAO.PasajeroDAO;
-import model.Pasajero;
-
+import model.*;
+import java.time.LocalDate;
 import java.util.List;
 /**
  *
@@ -27,34 +27,34 @@ public class PasajeroService {
             System.out.println("Ya existe un pasajero con esa cédula.");
             return false;
         }
+        int edad = java.time.Period.between(fechaNacimiento, LocalDate.now()).getYears();
+        Pasajero nuevo;
 
-        pasajeros.add(pasajero);
-        pasajeroDAO.guardar(pasajero);
+        if (edad >= 60) {
+            nuevo = new PasajeroAdultoMayor(cedula, nombre, fechaNacimiento);
+            System.out.println("ℹ El pasajero tiene " + edad
+                + " años → categoría Adulto Mayor asignada automáticamente (descuento 30%).");
+        } else {
+            nuevo = switch (tipoSolicitado.toLowerCase()) {
+                case "estudiante"  -> new PasajeroEstudiante(cedula, nombre, fechaNacimiento);
+                default            -> new PasajeroRegular(cedula, nombre, fechaNacimiento);
+            };
+
+        pasajeros.add(nuevo);
+        pasajeroDAO.guardar(nuevo);
         return true;
     }
 
     public Pasajero buscarPasajeroPorCedula(String cedula) {
-        for (Pasajero p : pasajeros) {
-            if (p.getCedula().equals(cedula)) {
-                return p;
-            }
-        }
-        return null;
+        return pasajeros.stream()
+            .filter(p -> p.getCedula().equals(cedula))
+            .findFirst().orElse(null);
     }
 
-    public List<Pasajero> getPasajeros() {
-        return pasajeros;
-    }
+    public List<Pasajero> getPasajeros() { return pasajeros; }
 
     public void listarPasajeros() {
-        if (pasajeros.isEmpty()) {
-            System.out.println("No hay pasajeros registrados.");
-            return;
-        }
-
-        for (Pasajero p : pasajeros) {
-            p.imprimirDetalle();
-            System.out.println("-------------------------");
-        }
+        if (pasajeros.isEmpty()) { System.out.println("No hay pasajeros registrados."); return; }
+        pasajeros.forEach(p -> { p.imprimirDetalle(); System.out.println("---"); });
     }
 }
