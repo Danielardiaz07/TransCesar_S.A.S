@@ -9,6 +9,7 @@ import model.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
 /**
  *
  * @author Jose Rodriguez
@@ -37,12 +38,12 @@ public class PasajeroDAO {
             String linea;
             while ((linea = br.readLine()) != null) {
                 String[] datos = linea.split(";");
-                if (datos.length == 3) {
+                if (datos.length == 4) {
                     String cedula = datos[0];
                     String nombre = datos[1];
                     String tipo = datos[2];
-
-                    Pasajero pasajero = crearPasajeroPorTipo(cedula, nombre, tipo);
+                    LocalDate fechaNacimiento = LocalDate.parse(datos[3]);
+                    Pasajero pasajero = crearPasajeroPorTipo(cedula, nombre, tipo, fechaNacimiento);
                     if (pasajero != null) {
                         lista.add(pasajero);
                     }
@@ -55,14 +56,14 @@ public class PasajeroDAO {
         return lista;
     }
 
-    private Pasajero crearPasajeroPorTipo(String cedula, String nombre, String tipo) {
+    private Pasajero crearPasajeroPorTipo(String cedula, String nombre, String tipo, LocalDate fechaNacimiento) {
         switch (tipo.toLowerCase()) {
             case "regular":
-                return new PasajeroRegular(cedula, nombre);
+                return new PasajeroRegular(cedula, nombre, fechaNacimiento);
             case "estudiante":
-                return new PasajeroEstudiante(cedula, nombre);
+                return new PasajeroEstudiante(cedula, nombre, fechaNacimiento);
             case "adultomayor":
-                return new PasajeroAdultoMayor(cedula, nombre);
+                return new PasajeroAdultoMayor(cedula, nombre, fechaNacimiento);
             default:
                 return null;
         }
