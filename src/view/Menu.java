@@ -13,6 +13,7 @@ import service.VehiculoService;
 import Service.ConductorService;
 import Service.PasajeroService;
 import Service.TicketService;
+import Service.ReservaService;
 import model.Ticket;
 import java.util.Scanner;
 public class Menu {
@@ -25,6 +26,11 @@ public class Menu {
     vehiculoService.listarVehiculos()
 );
     
+    private Service.ReservaService reservaService = new Service.ReservaService(
+    pasajeroService.getPasajeros(),
+    vehiculoService.listarVehiculos(),
+    ticketService
+);
     
     public void mostrar() {
         int opcion;
@@ -37,7 +43,8 @@ public class Menu {
             System.out.println("5. Listar tickets vendidos");
             System.out.println("6. Ver estadisticas");
             System.out.println("7. Modulo de reportes");
-            System.out.println("8. Salir");
+            System.out.println("8. Modulo de reservas");
+            System.out.println("9. Salir");
             System.out.print("Seleccione una opcion: ");
             opcion = scanner.nextInt();
             scanner.nextLine();
@@ -50,10 +57,11 @@ public class Menu {
                 case 5: listarTickets(); break;
                 case 6: verEstadisticas(); break;
                 case 7: mostrarMenuReportes(); break;
-                case 8: System.out.println("¡Hasta luego!"); break;
+                case 8: mostrarMenuReservas(); break;
+case 9:         System.out.println("Hasta luego."); break;
                 default: System.out.println("Opción no válida.");
             }
-        } while (opcion != 8);
+        } while (opcion != 9);
     }
     
     private void registrarVehiculo() {
@@ -200,7 +208,69 @@ public class Menu {
     } while (opcion != 5);
 }
     
-    
+    private void mostrarMenuReservas() {
+    int opcion;
+    do {
+        System.out.println("\n=== MODULO DE RESERVAS ===");
+        System.out.println("1. Crear reserva");
+        System.out.println("2. Cancelar reserva");
+        System.out.println("3. Listar reservas activas");
+        System.out.println("4. Historial de reservas de un pasajero");
+        System.out.println("5. Convertir reserva en ticket");
+        System.out.println("6. Verificar reservas vencidas");
+        System.out.println("7. Volver");
+        System.out.print("Seleccione: ");
+        opcion = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (opcion) {
+            case 1:
+                System.out.print("Cedula del pasajero: ");
+                String cedula = scanner.nextLine();
+                System.out.print("Placa del vehiculo: ");
+                String placa = scanner.nextLine();
+                System.out.print("Fecha del viaje (YYYY-MM-DD): ");
+                java.time.LocalDate fechaViaje = java.time.LocalDate.parse(scanner.nextLine());
+                reservaService.crearReserva(
+                    pasajeroService.buscarPasajeroPorCedula(cedula),
+                    vehiculoService.buscarPorPlaca(placa),
+                    fechaViaje
+                );
+                break;
+            case 2:
+                System.out.print("Codigo de la reserva: ");
+                String codigo = scanner.nextLine();
+                reservaService.cancelarReserva(codigo);
+                break;
+            case 3:
+                reservaService.listarReservasActivas();
+                break;
+            case 4:
+                System.out.print("Cedula del pasajero: ");
+                String cedulaH = scanner.nextLine();
+                reservaService.listarHistorialPasajero(cedulaH);
+                break;
+            case 5:
+                System.out.print("Codigo de la reserva: ");
+                String codigoT = scanner.nextLine();
+                System.out.print("Origen: ");
+                String origen = scanner.nextLine();
+                System.out.print("Destino: ");
+                String destino = scanner.nextLine();
+                reservaService.convertirEnTicket(codigoT, origen, destino);
+                break;
+            case 6:
+                int canceladas = reservaService.verificarReservasVencidas();
+                System.out.println("Reservas vencidas canceladas: " + canceladas);
+                break;
+            case 7:
+                System.out.println("Volviendo al menu principal.");
+                break;
+            default:
+                System.out.println("Opcion no valida.");
+        }
+    } while (opcion != 7);
+}
     
     
     
