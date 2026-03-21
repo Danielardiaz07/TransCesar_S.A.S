@@ -4,16 +4,21 @@
  */
 package model;
 
+import java.time.LocalDate;
+import java.time.Period;
+
 /**
  *
  * @author Jose Rodriguez
  */
 public abstract class Pasajero extends Persona {
     protected String tipoPasajero;
+    protected LocalDate fechaNacimiento;
 
-    public Pasajero(String cedula, String nombre, String tipoPasajero) {
+    public Pasajero(String cedula, String nombre, String tipoPasajero, LocalDate fechaNacimiento) {
         super(cedula, nombre);
         this.tipoPasajero = tipoPasajero;
+        this.fechaNacimiento= fechaNacimiento;
     }
 
     public String getTipoPasajero() {
