@@ -5,8 +5,8 @@
 package Service;
 
 import DAO.PasajeroDAO;
-import model.*;
-import java.time.LocalDate;
+import model.Pasajero;
+
 import java.util.List;
 /**
  *
@@ -28,36 +28,33 @@ public class PasajeroService {
             return false;
         }
 
-        // Calcular edad para decidir el tipo real
-        int edad = java.time.Period.between(fechaNacimiento, LocalDate.now()).getYears();
-        Pasajero nuevo;
-
-        if (edad >= 60) {
-            nuevo = new PasajeroAdultoMayor(cedula, nombre, fechaNacimiento);
-            System.out.println("ℹ El pasajero tiene " + edad
-                + " años → categoría Adulto Mayor asignada automáticamente (descuento 30%).");
-        } else {
-            nuevo = switch (tipoSolicitado.toLowerCase()) {
-                case "estudiante"  -> new PasajeroEstudiante(cedula, nombre, fechaNacimiento);
-                default            -> new PasajeroRegular(cedula, nombre, fechaNacimiento);
-            };
-        }
-
-        pasajeros.add(nuevo);
-        pasajeroDAO.guardar(nuevo);
+        pasajeros.add(pasajero);
+        pasajeroDAO.guardar(pasajero);
         return true;
     }
 
     public Pasajero buscarPasajeroPorCedula(String cedula) {
-        return pasajeros.stream()
-            .filter(p -> p.getCedula().equals(cedula))
-            .findFirst().orElse(null);
+        for (Pasajero p : pasajeros) {
+            if (p.getCedula().equals(cedula)) {
+                return p;
+            }
+        }
+        return null;
     }
 
-    public List<Pasajero> getPasajeros() { return pasajeros; }
+    public List<Pasajero> getPasajeros() {
+        return pasajeros;
+    }
 
     public void listarPasajeros() {
-        if (pasajeros.isEmpty()) { System.out.println("No hay pasajeros registrados."); return; }
-        pasajeros.forEach(p -> { p.imprimirDetalle(); System.out.println("---"); });
+        if (pasajeros.isEmpty()) {
+            System.out.println("No hay pasajeros registrados.");
+            return;
+        }
+
+        for (Pasajero p : pasajeros) {
+            p.imprimirDetalle();
+            System.out.println("-------------------------");
+        }
     }
 }
