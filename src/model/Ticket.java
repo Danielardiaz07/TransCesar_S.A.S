@@ -16,13 +16,23 @@ public class Ticket implements Imprimible,Calculable {
     private String origen;
     private String destino;
     private double valorFinal;
- public Ticket(Pasajero pasajero, Vehiculo vehiculo, LocalDate fechaCompra, String origen, String destino) {
+        
+    public Ticket(Pasajero pasajero, Vehiculo vehiculo, LocalDate fechaCompra, String origen, String destino) {
+           this.pasajero = pasajero;
+           this.vehiculo = vehiculo;
+           this.fechaCompra = fechaCompra;
+           this.origen = origen;
+           this.destino = destino;
+           this.valorFinal = calcularTotal();
+       }
+    
+    public Ticket(Pasajero pasajero, Vehiculo vehiculo, LocalDate fechaCompra, String origen, String destino, double tarifaEfectiva) {
         this.pasajero = pasajero;
         this.vehiculo = vehiculo;
         this.fechaCompra = fechaCompra;
         this.origen = origen;
         this.destino = destino;
-        this.valorFinal = calcularTotal();
+        this.valorFinal = tarifaEfectiva;
     }
 
     public Pasajero getPasajero() {

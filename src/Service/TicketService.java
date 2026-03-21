@@ -25,6 +25,8 @@ public class TicketService {
 
     private static final int limiteTicketsDia = 3;
 
+    private final FestivoService festivoService = new FestivoService();
+
     public TicketService(List<Pasajero> pasajeros, List<Vehiculo> vehiculos) {
         ticketDAO = new TicketDAO();
         tickets = ticketDAO.cargar(pasajeros, vehiculos);
@@ -55,14 +57,23 @@ public class TicketService {
             return null;
         }
 
-        Ticket ticket = new Ticket(pasajero, vehiculo, LocalDate.now(), origen, destino);
+        LocalDate hoy = LocalDate.now();
+        double factorFestivo = festivoService.getFactor(hoy);
+        double tarifaEfectiva = vehiculo.getTarifaBase() * factorFestivo;
+
+        Ticket ticket = new Ticket(pasajero, vehiculo, hoy, origen, destino, tarifaEfectiva);
 
         vehiculo.setPasajerosActuales(vehiculo.getPasajerosActuales() + 1);
 
         tickets.add(ticket);
         ticketDAO.guardar(ticket);
 
-        System.out.println("Ticket vendido con éxito.");
+        if (festivoService.esFestivo(hoy)) {
+            System.out.println("Ticket vendido con éxito. *** TARIFA CON RECARGO FESTIVO (+20%) ***");
+        } else {
+            System.out.println("Ticket vendido con éxito.");
+        }
+
         return ticket;
     }
 
@@ -162,7 +173,7 @@ public class TicketService {
         System.out.println("=== VEHÍCULO CON MÁS TICKETS VENDIDOS ===");
         vehiculo.imprimirDetalle();
     }
-    
+
     private long contarTicketsHoy(String cedula) {
         LocalDate hoy = LocalDate.now();
         return tickets.stream()
