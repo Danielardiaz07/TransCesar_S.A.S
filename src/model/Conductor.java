@@ -40,11 +40,15 @@ public class Conductor extends Persona{
 
     @Override
     public String toString() {
-        return "Conductor{" + "numeroLicencia=" + numeroLicencia + ", categoriaLicencia=" + categoriaLicencia + '}';
+        return numeroLicencia + ";" + categoriaLicencia + ";" + cedula + ";" + nombre;
     }
 
     @Override
     public void imprimirDetalle() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        System.out.println("=== CONDUCTOR ===");
+        System.out.println("Cédula    : " + cedula);
+        System.out.println("Nombre    : " + nombre);
+        System.out.println("Licencia  : " + numeroLicencia);
+        System.out.println("Categoría : " + categoriaLicencia);
     }
 }
