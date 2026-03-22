@@ -93,7 +93,7 @@ case 9:         System.out.println("Hasta luego."); break;
         System.out.println("Conductor registrado correctamente.");
     }
     
-    private void registrarPasajero() {
+ private void registrarPasajero() {
     System.out.println("\n-- Registrar Pasajero --");
     System.out.print("Cedula: ");
     String cedula = scanner.nextLine();
@@ -101,15 +101,23 @@ case 9:         System.out.println("Hasta luego."); break;
     String nombre = scanner.nextLine();
     System.out.print("Fecha de nacimiento (YYYY-MM-DD): ");
     java.time.LocalDate fechaNacimiento = java.time.LocalDate.parse(scanner.nextLine());
-    System.out.println("Tipo: 1. Regular  2. Estudiante");
-    int tipo = scanner.nextInt();
-    scanner.nextLine();
-    switch(tipo) {
-        case 1: pasajeroService.registrarPasajero(new model.PasajeroRegular(cedula, nombre, fechaNacimiento)); break;
-        case 2: pasajeroService.registrarPasajero(new model.PasajeroEstudiante(cedula, nombre, fechaNacimiento)); break;
-        default: System.out.println("Tipo no valido.");
+   
+    int edad = java.time.Period.between(fechaNacimiento, java.time.LocalDate.now()).getYears();
+    
+    if (edad >= 60) {
+        pasajeroService.registrarPasajero(new model.PasajeroAdultoMayor(cedula, nombre, fechaNacimiento));
+        System.out.println("Pasajero registrado como Adulto Mayor (descuento 30%).");
+    } else {
+        System.out.println("Tipo: 1. Regular  2. Estudiante");
+        int tipo = scanner.nextInt();
+        scanner.nextLine();
+        switch(tipo) {
+            case 1: pasajeroService.registrarPasajero(new model.PasajeroRegular(cedula, nombre, fechaNacimiento)); break;
+            case 2: pasajeroService.registrarPasajero(new model.PasajeroEstudiante(cedula, nombre, fechaNacimiento)); break;
+            default: System.out.println("Tipo no valido.");
+        }
+        System.out.println("Pasajero registrado correctamente.");
     }
-    System.out.println("Pasajero registrado correctamente.");
 }
      
     private void venderTicket() {
